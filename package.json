@@ -14,6 +14,8 @@
   "author": "WebEQ",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mariadb": "^3.4.5",
+    "uuid": "^13.0.0"
   }
 }
