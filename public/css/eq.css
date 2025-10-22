@@ -2,261 +2,726 @@
 
 /* --- 색상 변수 정의 (일관성을 위해) --- */
 :root {
-    --bg-dark: #1A1D24;
-    --bg-ui: #2D3748;
-    --bg-ui-light: #4A5568;
-    --border-color: #4A5568;
-    --text-light: #E2E8F0;
-    --text-medium: #A0AEC0;
-    --accent-blue: #3B82F6;
-    --accent-green: #34D399; /* 긍정, 추가, ON */
-    --accent-red: #EF4444;   /* 부정, 삭제 */
-    --grid-line: rgba(160, 174, 192, 0.1); /* 옅은 그리드 라인 */
+  --bg-dark: #1a1d24;
+  --bg-ui: #2d3748;
+  --bg-ui-light: #4a5568;
+  --border-color: #4a5568;
+  --text-light: #e2e8f0;
+  --text-medium: #a0aec0;
+  --accent-blue: #3b82f6;
+  --accent-green: #34d399; /* 긍정, 추가, ON */
+  --accent-red: #ef4444; /* 부정, 삭제 */
+  --grid-line: rgba(160, 174, 192, 0.1); /* 옅은 그리드 라인 */
 }
 
 /* --- 페이지 레이아웃 --- */
 .main-content {
-    width: 95%;
-    max-width: 1400px;
-    margin: 0 auto; /* 중앙 정렬 추가 */
-    padding: 40px 20px; /* 패딩 조정 */
+  width: 95%;
+  max-width: 1400px;
+  margin: 0 auto; /* 중앙 정렬 추가 */
+  padding: 40px 20px; /* 패딩 조정 */
 }
 
 /* --- 상단 오디오 컨트롤 --- */
 .audio-controls {
-    width: 100%;
-    background-color: var(--bg-ui);
-    padding: 15px 25px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  width: 100%;
+  background-color: var(--bg-ui);
+  padding: 15px 25px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .audio-info {
-    font-weight: 500;
-    color: var(--text-medium);
+  font-weight: 500;
+  color: var(--text-medium);
 }
 
 .control-buttons button {
-    padding: 8px 18px;
-    margin-left: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
+  padding: 8px 18px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 #play-pause-btn {
-    background-color: var(--accent-blue);
-    color: white;
+  background-color: var(--accent-blue);
+  color: white;
 }
-#play-pause-btn:hover { background-color: #2563EB; }
+#play-pause-btn:hover {
+  background-color: #2563eb;
+}
 
 #eq-toggle-btn {
-    background-color: var(--bg-ui-light);
-    color: var(--text-light);
+  background-color: var(--bg-ui-light);
+  color: var(--text-light);
 }
 #eq-toggle-btn.on {
-    background-color: var(--accent-green);
-    color: white;
+  background-color: var(--accent-green);
+  color: white;
 }
 
 /* --- GEQ/PEQ 토글 스위치 --- */
 .toggle-switch {
-    display: inline-flex;
-    background-color: var(--bg-dark);
-    border-radius: 8px;
-    padding: 5px;
-    border: 1px solid var(--border-color);
-    margin-bottom: 30px;
+  display: inline-flex;
+  background-color: var(--bg-dark);
+  border-radius: 8px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
 }
 
 .toggle-option {
-    padding: 10px 30px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    color: var(--text-medium);
+  padding: 10px 30px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  color: var(--text-medium);
 }
 
 .toggle-option.active {
-    color: white;
-    background-color: var(--accent-blue);
+  color: white;
+  background-color: var(--accent-blue);
 }
 
 /* --- 메인 EQ 패널 --- */
 .eq-panel {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 350px 1fr; /* 컨트롤 패널 너비 고정 */
-    gap: 30px;
-    background-color: var(--bg-ui);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    padding: 25px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 350px 1fr; /* 컨트롤 패널 너비 고정 */
+  gap: 30px;
+  background-color: var(--bg-ui);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: 25px;
 }
 
 .controls-section {
-    background-color: var(--bg-dark);
-    padding: 20px;
-    border-radius: 8px;
-    max-height: 600px;
-    overflow-y: auto;
+  background-color: var(--bg-dark);
+  padding: 20px;
+  border-radius: 8px;
+  max-height: 600px;
+  overflow-y: auto;
 }
-.controls-section h2 { margin-bottom: 8px; color: var(--text-light); }
-.controls-section p { color: var(--text-medium); font-size: 14px; margin-bottom: 20px;}
+.controls-section h2 {
+  margin-bottom: 8px;
+  color: var(--text-light);
+}
+.controls-section p {
+  color: var(--text-medium);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
 
-.eq-controls { display: none; }
-.eq-controls.visible { display: block; }
+.eq-controls {
+  display: none;
+}
+.eq-controls.visible {
+  display: block;
+}
 
 /* --- GEQ 슬라이더 리스트 --- */
-.geq-slider-list { list-style: none; padding: 0; }
-.geq-slider-list li { margin-bottom: 15px; }
-.geq-slider-list li label { font-size: 14px; color: var(--text-medium); }
+.geq-slider-list {
+  list-style: none;
+  padding: 0;
+}
+.geq-slider-list li {
+  margin-bottom: 15px;
+}
+.geq-slider-list li label {
+  font-size: 14px;
+  color: var(--text-medium);
+}
 
-.slider-wrapper { display: flex; align-items: center; gap: 15px; margin-top: 5px; }
-.slider-wrapper span { font-size: 14px; color: var(--text-medium); }
+.slider-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 5px;
+}
+.slider-wrapper span {
+  font-size: 14px;
+  color: var(--text-medium);
+}
 
 /* 커스텀 슬라이더 (Range Input) 스타일 */
 input[type="range"] {
-    flex-grow: 1;
-    -webkit-appearance: none;
-    appearance: none;
-    background: transparent;
-    cursor: pointer;
+  flex-grow: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-    background: var(--bg-dark);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    height: 8px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  height: 8px;
 }
 input[type="range"]::-moz-range-track {
-    background: var(--bg-dark);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    height: 8px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  height: 8px;
 }
 input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    margin-top: -5px; /* (thumb height - track height) / 2 */
-    background-color: var(--accent-blue);
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--bg-ui);
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px; /* (thumb height - track height) / 2 */
+  background-color: var(--accent-blue);
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-ui);
 }
 input[type="range"]::-moz-range-thumb {
-    border: 2px solid var(--bg-ui);
-    background-color: var(--accent-blue);
-    height: 14px;
-    width: 14px;
-    border-radius: 50%;
+  border: 2px solid var(--bg-ui);
+  background-color: var(--accent-blue);
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
 }
 
 .control-input {
-    background-color: var(--bg-dark);
-    border: 1px solid var(--border-color);
-    color: var(--text-light);
-    border-radius: 4px;
-    padding: 5px;
-    text-align: center;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+  border-radius: 4px;
+  padding: 5px;
+  text-align: center;
 }
-.control-input[type="number"] { width: 60px; }
+.control-input[type="number"] {
+  width: 60px;
+}
 
 /* --- PEQ 필터 리스트 --- */
-.peq-filter-list { list-style: none; padding: 0; }
-.peq-filter-list li {
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s;
+.peq-filter-list {
+  list-style: none;
+  padding: 0;
 }
-.peq-filter-list li:hover { background-color: var(--bg-ui-light); }
+.peq-filter-list li {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+.peq-filter-list li:hover {
+  background-color: var(--bg-ui-light);
+}
 .peq-filter-list li .filter-id {
-    background-color: var(--accent-blue);
-    color: white;
-    display: inline-block; width: 25px; height: 25px; line-height: 25px; text-align: center; border-radius: 50%; font-weight: bold; margin-right: 15px;
+  background-color: var(--accent-blue);
+  color: white;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-right: 15px;
 }
 #add-filter-btn {
-    width: 100%; padding: 10px; margin-top: 10px;
-    background-color: var(--accent-green);
-    color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
-    transition: background-color 0.2s;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: var(--accent-green);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
 }
-#add-filter-btn:hover { background-color: #16A34A; }
+#add-filter-btn:hover {
+  background-color: #16a34a;
+}
 
 /* --- 그래프 섹션 --- */
 .graph-section {
-    position: relative; display: flex; flex-direction: column;
-    min-height: 400px; border-radius: 8px; overflow: hidden;
-    background-color: var(--bg-dark);
-    padding: 10px 10px 0 45px; /* Y축 라벨 공간 확보 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  padding: 10px 10px 0 45px; /* Y축 라벨 공간 확보 */
 }
 #graph-visualization {
-    flex-grow: 1; position: relative;
-    /* 다크모드 그리드 */
-    background-image:
-        linear-gradient(to top, var(--grid-line) 1px, transparent 1px),
-        linear-gradient(to right, var(--grid-line) 1px, transparent 1px);
-    background-size: 10% 10%, 10% 10%; /* 10x10 그리드 */
+  flex-grow: 1;
+  position: relative;
+  /* 다크모드 그리드 */
+  background-image: linear-gradient(
+      to top,
+      var(--grid-line) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px);
+  background-size: 10% 10%, 10% 10%; /* 10x10 그리드 */
 }
 
-.y-labels, .freq-labels { color: var(--text-medium); font-family: 'Segoe UI', 'Roboto', sans-serif; }
-.y-labels { width: 40px; padding-right: 10px; left: 0; top: 10px; bottom: 30px; position: absolute; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; font-size: 12px; pointer-events: none; }
-.y-labels span { transform: translateY(-50%); }
-.y-labels span:nth-child(6) { font-weight: bold; color: var(--text-light); } /* 0dB */
+.y-labels,
+.freq-labels {
+  color: var(--text-medium);
+  font-family: "Segoe UI", "Roboto", sans-serif;
+}
+.y-labels {
+  width: 40px;
+  padding-right: 10px;
+  left: 0;
+  top: 10px;
+  bottom: 30px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+  pointer-events: none;
+}
+.y-labels span {
+  transform: translateY(-50%);
+}
+.y-labels span:nth-child(6) {
+  font-weight: bold;
+  color: var(--text-light);
+} /* 0dB */
 
 .freq-labels {
-    width: 100%; height: 30px; line-height: 30px;
-    display: grid; padding-left: 45px; /* Y축 라벨 너비만큼 밀기 */
-    grid-template-columns: 3% 5% 10% 15% 15% 15% 15% 15% 7%; font-size: 12px;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  display: grid;
+  padding-left: 45px; /* Y축 라벨 너비만큼 밀기 */
+  grid-template-columns: 3% 5% 10% 15% 15% 15% 15% 15% 7%;
+  font-size: 12px;
 }
-.freq-labels span { border-left: 1px solid var(--grid-line); text-align: center; }
+.freq-labels span {
+  border-left: 1px solid var(--grid-line);
+  text-align: center;
+}
 
 /* --- PEQ 필터 동그라미(Dot) --- */
 .peq-dot {
-    position: absolute; background-color: var(--accent-blue); border: 2px solid white;
-    color: white; width: 24px; height: 24px; line-height: 20px; text-align: center;
-    border-radius: 50%; font-weight: bold; cursor: grab; z-index: 10;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); /* 파란색 그림자 */
-    transition: transform 0.2s, box-shadow 0.2s;
+  position: absolute;
+  background-color: var(--accent-blue);
+  border: 2px solid white;
+  color: white;
+  width: 24px;
+  height: 24px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: grab;
+  z-index: 10;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); /* 파란색 그림자 */
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.peq-dot:hover { transform: translate(-50%, -50%) scale(1.1); }
+.peq-dot:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
 .peq-dot.selected {
-    border-color: var(--accent-red);
-    cursor: grabbing;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.7); /* 빨간색 그림자 */
+  border-color: var(--accent-red);
+  cursor: grabbing;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.7); /* 빨간색 그림자 */
 }
 
 /* --- PEQ 파라미터 팝업 --- */
 .param-popup {
-    position: absolute; background: var(--bg-ui); border: 1px solid var(--border-color);
-    padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    z-index: 20; display: none; width: 200px; font-size: 13px; color: var(--text-light);
+  position: absolute;
+  background: var(--bg-ui);
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+  display: none;
+  width: 200px;
+  font-size: 13px;
+  color: var(--text-light);
 }
-.param-popup h4 { margin: 0 0 15px 0; font-size: 16px; color: var(--accent-blue); font-weight: 600;}
-.param-popup .input-group { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-.param-popup .input-group label { font-weight: 500; }
-.param-popup .input-group input, .param-popup .input-group select {
-    width: 55%;
-    background-color: var(--bg-dark);
-    color: var(--text-light);
-    border: 1px solid var(--border-color);
-    border-radius: 4px; padding: 5px;
+.param-popup h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+.param-popup .input-group {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.param-popup .input-group label {
+  font-weight: 500;
+}
+.param-popup .input-group input,
+.param-popup .input-group select {
+  width: 55%;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 5px;
 }
 .param-popup .delete-btn-graph {
-    background-color: var(--accent-red); color: white; border: none; padding: 8px;
-    border-radius: 4px; margin-top: 10px; width: 100%; cursor: pointer; font-weight: 600;
+  background-color: var(--accent-red);
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 600;
 }
-.param-popup .delete-btn-graph:hover { background-color: #DC2626; }
+.param-popup .delete-btn-graph:hover {
+  background-color: #dc2626;
+}
+
+/* 1. 그래프 영역 */
+#graph-wrapper {
+  position: relative;
+  width: 1250px;
+  height: 400px;
+  cursor: default;
+  margin-bottom: 20px;
+  order: 1;
+}
+#responseCanvas {
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: 1200px;
+  height: 380px;
+  border: 1px solid #333;
+  background-color: #1a1a1a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  cursor: default;
+}
+
+/* 2. 컨트롤 영역 */
+#controls-section {
+  width: 1250px;
+  order: 2;
+}
+
+#tabs {
+  width: 100%;
+  justify-content: flex-start;
+  display: flex;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #2d3748;
+  border-bottom: none;
+  background-color: #2d3748;
+  margin: 0 2px;
+  border-radius: 6px 6px 0 0;
+  font-weight: bold;
+}
+.tab-button.active {
+  background-color: #4a5568;
+  border-color: #007bff;
+  border-bottom: 1px solid #4a5568;
+  color: #007bff;
+}
+
+/* 컨트롤 창 스타일 (테두리 통일성) */
+#controls-container,
+#geq-container {
+  background: #2d3748;
+  padding: 20px;
+  border-radius: 0 8px 8px 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+  border: 1px solid #007bff;
+  border-top: 1px solid #2d3748;
+  position: relative;
+}
+#controls-container.active {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 15px;
+  min-height: 80px;
+  padding-bottom: 50px;
+}
+#geq-container.active {
+  display: flex;
+  flex-direction: column; /* 슬라이더 그룹과 버튼을 분리하기 위해 컬럼으로 변경 */
+  justify-content: space-between;
+  align-items: center;
+  height: 330px; /* 충분한 높이 확보 */
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+/* PEQ 추가 버튼 스타일 및 위치 */
+#add-eq-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: #007bff;
+  color: #2d3748;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  margin: 0;
+}
+#add-eq-btn:hover {
+  background: #0056b3;
+}
+
+/* 초기화 버튼 스타일 및 위치 */
+.reset-btn {
+  position: absolute;
+  right: 15px;
+  bottom: 10px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  z-index: 10;
+}
+.reset-btn:hover {
+  background: #5a6268;
+}
+
+/* 3. PEQ 간략 카드 스타일 */
+.peq-card {
+  background: #1a1d24;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: auto;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  font-weight: bold;
+  line-height: 1;
+}
+.peq-card:hover {
+  border: 1px solid #007bff;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+.peq-card strong {
+  color: #007bff;
+  margin-right: 5px;
+}
+.peq-card .sep {
+  color: #666;
+  margin: 0 5px;
+}
+
+/* 💡 1번 문제 해결: PEQ 마커 스타일 (아이콘) */
+.eq-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; /* 원형 */
+  background: #ff5722; /* 주황색 마커 */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: grab;
+  transform: translate(-50%, -50%); /* 중심 기준으로 위치 */
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 50; /* 그래프 라인이나 다른 라벨 위에 표시 */
+}
+.eq-marker:active {
+  cursor: grabbing;
+}
+
+/* 4. GEQ 스타일 복구 */
+/* GEQ 슬라이더를 담는 플렉스 컨테이너 */
+#geq-slider-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  width: 100%;
+  height: 260px; /* 슬라이더 + 게인 디스플레이 공간 */
+  padding-bottom: 20px;
+}
+.geq-band {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 0 1px;
+  min-width: 20px;
+}
+/* 💡 3번 문제 해결: GEQ 게인 디스플레이 스타일 */
+.geq-band .gain-display {
+  font-size: 10px;
+  color: #333;
+  font-weight: bold;
+  height: 15px; /* 공간 확보 */
+  text-align: center;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.geq-band input[type="range"] {
+  writing-mode: bt-lr;
+  -webkit-appearance: slider-vertical;
+  appearance: slider-vertical;
+  width: 6px;
+  height: 180px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+.geq-band label {
+  font-size: 8px;
+  font-weight: bold;
+  margin-top: 5px;
+  width: 25px;
+  text-align: center;
+  line-height: 1;
+}
+
+/* 5. 그래프 라벨 스타일 */
+.label-x-freq {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 10px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+/* 💡 2번 문제 해결: Y축 라벨 위치 조정 */
+.label-y-db {
+  position: absolute;
+  font-size: 10px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+  left: 2px; /* 랩퍼의 왼쪽 2px 위치 */
+  text-align: right;
+  color: #00ff7f;
+  width: 40px; /* 라벨 영역 확보 */
+}
+/* 6. PEQ 모달 스타일 (추가 및 수정) */
+#peq-modal {
+  /* 팝업 창의 기본 스타일 */
+  display: none; /* JS에서 'flex'로 변경하여 보이게 함 */
+  position: fixed; /* 화면 전체 고정 */
+  z-index: 1000; /* 모든 요소 위에 표시 */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6); /* 반투명 검정 배경 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+}
+
+.modal-content {
+  background-color: #2d3748;
+  padding: 30px;
+  border: 1px solid #888;
+  width: 400px; /* 모달 컨텐츠 너비 */
+  max-width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* 모달 내부 입력 요소 스타일 */
+.modal-content h2 {
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.modal-content .input-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.modal-content label {
+  font-weight: bold;
+  width: 100px;
+}
+.modal-content input,
+.modal-content select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+/* 모달 닫기 버튼 */
+#modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #aaa;
+}
+#modal-close-btn:hover {
+  color: #000;
+}
+
+/* 모달 하단 버튼 */
+#modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  gap: 10px;
+}
+
+#modal-actions button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#modal-add-btn,
+#modal-actions button:last-child {
+  background-color: #007bff;
+  color: white;
+}
+#modal-cancel-btn,
+#modal-delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
