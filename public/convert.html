@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TXT 파일 변환</title>
+    <style>
+        /* [index.html의 모든 CSS를 복사/붙여넣기] - 상단바와 공통 스타일 */
+        :root {
+            --primary-color: #A5DFF9; /* 연한 푸른색 테마 */
+            --background-color: #f7f9fc;
+            --text-color: #333;
+            --button-bg: #e0f4ff;
+            --button-shadow: rgba(165, 223, 249, 0.4);
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+        nav a:hover {
+            opacity: 0.8;
+        }
+        /* / [index.html의 모든 CSS를 복사/붙여넣기] */
+
+        /* 파일 변환 화면 전용 스타일 */
+        .conversion-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 80%;
+            max-width: 1000px;
+            margin-top: 50px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 왼쪽: 드래그앤 드롭 영역 */
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+            border: 3px dashed var(--primary-color); /* 테마색 점선 테두리 */
+            border-radius: 10px;
+            background-color: var(--button-bg); /* 연한 배경색 */
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .upload-area:hover {
+            background-color: #c9e9f6; /* 호버 시 색상 변화 */
+            border-color: #3498db;
+        }
+        .upload-area strong {
+            margin-top: 15px;
+            color: var(--text-color);
+            font-size: 20px;
+        }
+
+        /* 오른쪽: 포맷 선택 리스트 */
+        .format-selection {
+            padding: 10px;
+        }
+        .format-selection h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+        .format-list {
+            list-style: none;
+            padding: 0;
+            border-left: 3px solid #eee; /* 리스트 구분을 위한 선 */
+        }
+        .format-list li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 500;
+        }
+        .format-list li:hover {
+            background-color: var(--button-bg);
+            color: #1a7fb5;
+        }
+        .format-list li:first-child {
+            padding-top: 0;
+        }
+        .format-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Audio Toolkit</a>
+        <nav>
+            <a href="eq.html">EQ 조절</a>
+            <a href="convert.html">파일 변환</a>
+        </nav>
+    </header>
+
+    <div class="conversion-container">
+        <div class="upload-area">
+            <p>REW 측정 또는 EQ 필터 TXT 파일을 드래그앤드롭 하세요.</p>
+            <strong>파일 업로드</strong>
+        </div>
+
+        <div class="format-selection">
+            <h3>변환할 타겟 포맷 선택</h3>
+            <ul class="format-list">
+                <li>miniDSP용 TXT 포맷</li>
+                <li>Hypex DSP용 XML 포맷</li>
+                <li>Generic Biquad CSV 포맷</li>
+                <li>커스텀 스크립트 출력</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
