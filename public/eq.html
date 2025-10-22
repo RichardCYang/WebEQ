@@ -3,133 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EQ 조절</title>
-    <style>
-        /* --- 공통 스타일 --- */
-        :root {
-            --primary-color: #A5DFF9; 
-            --background-color: #f7f9fc;
-            --text-color: #333;
-            --button-bg: #e0f4ff;
-            --grid-line: #ddd; /* 그리드 라인 색상 */
-            --y-range: 30; /* Gain Range: +15dB to -15dB = 30dB */
-        }
-        body { margin: 0; padding: 0; background-color: var(--background-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
-        header { width: 100%; background-color: var(--primary-color); color: white; padding: 15px 40px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; font-weight: bold; text-decoration: none; color: white; }
-        nav a { color: white; text-decoration: none; margin-left: 25px; font-size: 16px; transition: opacity 0.3s; }
-        nav a:hover { opacity: 0.8; }
-        .content-area { width: 90%; max-width: 1200px; padding: 40px 0; display: flex; flex-direction: column; align-items: center; }
-        .audio-controls { width: 100%; background-color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .audio-info { font-weight: 600; color: var(--primary-color); }
-        .control-buttons button { padding: 8px 15px; margin-left: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: background-color 0.2s; }
-        #play-pause-btn { background-color: var(--primary-color); color: white; }
-        #eq-toggle-btn.on { background-color: #2ecc71; color: white; }
-        .toggle-switch { display: flex; background-color: #e0e5ec; border-radius: 8px; padding: 5px; margin-bottom: 30px; box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1), inset -1px -1px 3px #ffffff; }
-        .toggle-option { padding: 10px 30px; font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.3s ease; color: #666; text-align: center; }
-        .toggle-option.active { color: var(--text-color); background-color: var(--button-bg); box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1), -2px -2px 5px #ffffff; }
-        .eq-panel { width: 100%; display: grid; grid-template-columns: 1fr 2fr; gap: 30px; background-color: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); padding: 20px; }
-        .eq-controls { display: none; }
-        .eq-controls.visible { display: block; }
-        .controls-section { padding: 10px; border-right: 1px solid #eee; max-height: 550px; overflow-y: auto; }
-        .geq-slider-list { padding: 0; list-style: none; }
-        .geq-slider-list li { margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px dashed #eee; }
-        .slider-wrapper { display: flex; align-items: center; }
-        .slider-wrapper input[type="range"] { flex-grow: 1; margin-right: 10px; }
-        .control-input { padding: 5px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; }
-        .control-input[type="number"] { width: 60px; text-align: right; }
-        .slider-wrapper span { font-size: 14px; color: #666; }
-        .peq-filter-list { list-style: none; padding: 0; }
-        .peq-filter-list li { padding: 8px 5px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .peq-filter-list li:hover { background-color: var(--button-bg); }
-        .peq-filter-list li .filter-id { display: inline-block; width: 25px; height: 25px; line-height: 25px; text-align: center; border-radius: 50%; background-color: var(--primary-color); color: white; font-weight: bold; margin-right: 10px; }
-
-        /* --- 그래프 섹션 (REW 스타일 그리드 개선) --- */
-        .graph-section {
-            position: relative; display: flex; flex-direction: column; 
-            min-height: 400px; background-color: white; border-radius: 8px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); overflow: hidden;
-            padding: 0 10px 0 35px; /* Y축 라벨 공간 확보 */
-        }
-        #graph-visualization {
-            flex-grow: 1; position: relative;
-            background-color: #f7f7f7;
-            /* REW 스타일 그리드: Y축 3dB 간격 (30dB 범위이므로 10줄) */
-            background-image: 
-                linear-gradient(to top, var(--grid-line) 1px, transparent 1px),
-                /* 세로줄 (로그 Freq, 가상 구현) */
-                linear-gradient(to right, 
-                    var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 100px); 
-            background-size: 100% 10%, 10% 100%; 
-            border: 1px solid #ccc;
-        }
-
-        /* --- Y축 라벨 (dB) --- */
-        .y-labels {
-            position: absolute; left: 0; top: 0; bottom: 20px; width: 30px; 
-            display: flex; flex-direction: column; justify-content: space-between;
-            align-items: flex-end; font-size: 11px; color: #555; pointer-events: none;
-            padding: 0 5px;
-        }
-        .y-labels span {
-            height: 0; position: relative; 
-            transform: translateY(50%); /* 텍스트를 라인 중앙에 위치 */
-        }
-        .y-labels span:nth-child(6) { font-weight: bold; color: #222; } /* 0dB 강조 */
-        
-        /* --- X축 라벨 (Freq) --- */
-        .freq-labels {
-            width: 100%; height: 20px; background-color: white;
-            display: grid; 
-            /* 로그 스케일 느낌을 내기 위해 Grid Template Columns 비율 조정 */
-            grid-template-columns: 
-                3% 5% 10% 15% 15% 15% 15% 15% 7%; 
-            border-top: 1px solid #ccc;
-            padding-left: 1px;
-        }
-        .freq-labels span {
-            text-align: left; padding-left: 2px; font-size: 11px; color: #555;
-            border-left: 1px solid var(--grid-line);
-        }
-
-        /* --- PEQ 필터 동그라미 스타일 --- */
-        .peq-dot {
-            position: absolute; background-color: var(--primary-color); border: 3px solid white; 
-            color: white; width: 30px; height: 30px; line-height: 24px; text-align: center;
-            border-radius: 50%; font-weight: bold; cursor: grab; z-index: 10;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); 
-        }
-        .peq-dot.selected { border-color: #e74c3c; cursor: grabbing; }
-
-        /* --- PEQ 파라미터 팝업 --- */
-        .param-popup {
-            position: absolute; background: white; border: 1px solid #ccc;
-            padding: 10px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            z-index: 20; display: none; width: 180px; font-size: 13px;
-        }
-        .param-popup h4 { margin: 0 0 10px 0; font-size: 15px; color: var(--primary-color); }
-        .param-popup .input-group { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;}
-        .param-popup .input-group label { font-weight: 600; width: 40%; }
-        .param-popup .input-group input, .param-popup .input-group select { width: 55%; padding: 3px; border: 1px solid #ddd; }
-        .param-popup .delete-btn-graph { 
-            background-color: #e74c3c; color: white; border: none; padding: 5px 10px;
-            border-radius: 4px; margin-top: 8px; width: 100%; cursor: pointer;
-        }
-    </style>
+    <title>EQ - My Studio</title>
+    <!-- 공통 스타일과 EQ 전용 스타일을 링크합니다. -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/eq.css">
 </head>
 <body>
-    <header>
-        <a href="index.html" class="logo">Audio Toolkit</a>
-        <nav>
-            <a href="eq.html">EQ 조절</a>
-            <a href="convert.html">파일 변환</a>
+    <!-- 헤더를 공통 스타일로 변경합니다. -->
+    <header class="app-header">
+        <div class="logo">
+            <a href="index.html">STUDIO</a>
+        </div>
+        <nav class="navigation">
+            <a href="eq.html" class="nav-btn active">EQ</a>
+            <a href="transform.html" class="nav-btn">Transform</a>
         </nav>
     </header>
 
-    <div class="content-area">
+    <!-- content-area를 main-content 클래스를 가진 main 태그로 변경합니다. -->
+    <main class="main-content">
         <div class="audio-controls">
             <div id="audio-info" class="audio-info">
-                테스트 음원: 서버 기본 음원 (또는 사용자 업로드 파일명)
+                테스트 음원: Sine Wave 1kHz
             </div>
             <div class="control-buttons">
                 <button id="play-pause-btn">▶ 재생</button>
@@ -138,62 +33,50 @@
         </div>
 
         <div class="toggle-switch">
-            <div id="geq" class="toggle-option active">GEQ (Graphic EQ)</div>
-            <div id="peq" class="toggle-option">PEQ (Parametric EQ)</div>
+            <div id="geq" class="toggle-option active">Graphic EQ</div>
+            <div id="peq" class="toggle-option">Parametric EQ</div>
         </div>
         
         <div class="eq-panel">
             <div class="controls-section">
                 <div id="geq-controls" class="eq-controls visible">
                     <h2>GEQ 컨트롤 (31 Band)</h2>
-                    <p style="color: #666; font-size: 14px;">(주파수 대역별 게인 슬라이더)</p>
+                    <p>슬라이더를 조절하여 각 주파수 대역의 게인을 변경합니다.</p>
                     <ul class="geq-slider-list" id="geq-list-container">
-                        </ul>
+                        <!-- JS로 내용 채워짐 -->
+                    </ul>
                 </div>
 
                 <div id="peq-controls" class="eq-controls">
                     <h2>PEQ 필터 목록</h2>
+                    <p>필터를 추가하고 그래프의 점을 움직여 EQ를 조절하세요.</p>
                     <ul class="peq-filter-list" id="peq-filter-list">
-                        </ul>
-                    <button id="add-filter-btn" style="width: 100%; padding: 10px; margin-top: 10px; background-color: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                        + 필터 추가
-                    </button>
+                        <!-- JS로 내용 채워짐 -->
+                    </ul>
+                    <button id="add-filter-btn">+ 필터 추가</button>
                 </div>
             </div>
 
             <div class="graph-section">
                 <div class="y-labels">
-                    <span>+15</span>
-                    <span>+12</span>
-                    <span>+9</span>
-                    <span>+6</span>
-                    <span>+3</span>
+                    <span>+15</span><span>+12</span><span>+9</span><span>+6</span><span>+3</span>
                     <span>0</span>
-                    <span>-3</span>
-                    <span>-6</span>
-                    <span>-9</span>
-                    <span>-12</span>
-                    <span>-15</span>
+                    <span>-3</span><span>-6</span><span>-9</span><span>-12</span><span>-15</span>
                 </div>
                 
                 <div id="graph-visualization">
-                    </div>
+                    <!-- JS로 PEQ 점들 채워짐 -->
+                </div>
                 
                 <div class="freq-labels">
-                    <span>10Hz</span>
-                    <span>50Hz</span>
-                    <span>100Hz</span>
-                    <span>200Hz</span>
-                    <span>500Hz</span>
-                    <span>1kHz</span>
-                    <span>5kHz</span>
-                    <span>10kHz</span>
-                    <span>20kHz</span>
+                    <span>10</span><span>50</span><span>100</span><span>200</span><span>500</span>
+                    <span>1k</span><span>5k</span><span>10k</span><span>20k</span>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
+    <!-- 팝업 창은 원본 그대로 유지 -->
     <div id="param-popup" class="param-popup">
         <h4 id="popup-title"></h4>
         <div class="input-group">
@@ -219,6 +102,7 @@
         <button class="delete-btn-graph" id="popup-delete-btn">필터 삭제</button>
     </div>
 
+    <!-- === JAVASCRIPT === -->
     <script>
         const GEQ_FREQUENCIES = [
             20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 
@@ -260,17 +144,18 @@
             return MAX_GAIN - ((y / 100) * (MAX_GAIN - MIN_GAIN));
         }
 
-        // GEQ 슬라이더 생성 함수 (이전과 동일)
+        // GEQ 슬라이더 생성 함수
         function createGeqSliders() {
             const container = document.getElementById('geq-list-container');
             container.innerHTML = ''; 
             GEQ_FREQUENCIES.forEach((freq) => {
                 const li = document.createElement('li');
+                const freqLabel = freq >= 1000 ? `${(freq/1000).toFixed(1).replace('.0','')}k` : freq;
                 li.innerHTML = `
-                    <label>${freq} Hz Gain</label>
+                    <label>${freqLabel} Hz Gain</label>
                     <div class="slider-wrapper">
                         <input type="range" min="${MIN_GAIN}" max="${MAX_GAIN}" step="0.1" value="0" id="geq-${freq}">
-                        <input type="number" class="control-input" style="width: 60px;" value="0.0" step="0.1" data-freq="${freq}">
+                        <input type="number" class="control-input" value="0.0" step="0.1" data-freq="${freq}">
                         <span>dB</span>
                     </div>
                 `;
@@ -284,7 +169,6 @@
         }
         
         // --- PEQ 관련 함수 ---
-
         function addPeqFilterData() {
             const newFilter = {
                 id: nextFilterId++,
@@ -297,27 +181,22 @@
             return newFilter;
         }
 
-        // 필터 데이터 업데이트 및 그래프/리스트 갱신
         function updateFilterData(id, key, value) {
             const filter = peqFilters.find(f => f.id == id);
             if (!filter) return;
 
-            // 값 제한 및 형식 변환
-            let val = parseFloat(value);
+            let val = (key === 'type') ? value : parseFloat(value);
             if (key === 'freq') val = Math.max(MIN_FREQ, Math.min(MAX_FREQ, val));
             if (key === 'gain') val = Math.max(MIN_GAIN, Math.min(MAX_GAIN, val));
             if (key === 'q') val = Math.max(0.7, Math.min(100, val));
-            if (key === 'type') val = value;
-
+            
             filter[key] = val;
             
-            // 팝업이 열려있다면 갱신
             if(selectedFilterId == id) {
-                selectFilter(id, false); // 위치는 유지하고 팝업 내용만 갱신
+                selectFilter(id, false); 
             }
             
-            renderAllPeq(); // 전체 갱신 (리스트, 동그라미 위치)
-            // 실제 구현 시: EQ 필터 및 그래프 렌더링 함수 호출
+            renderAllPeq(); 
         }
 
         function renderPeqList() {
@@ -329,7 +208,7 @@
                 li.setAttribute('data-id', filter.id);
                 li.innerHTML = `
                     <div><span class="filter-id">${filter.id}</span> 필터 ${filter.id}</div>
-                    <span style="font-size: 12px; color: #777;">${filter.freq.toFixed(0)}Hz / ${filter.gain.toFixed(1)}dB</span>
+                    <span style="font-size: 12px; color: var(--text-medium);">${filter.freq.toFixed(0)}Hz / ${filter.gain.toFixed(1)}dB</span>
                 `;
                 li.onclick = () => selectFilter(filter.id);
                 listContainer.appendChild(li);
@@ -338,35 +217,31 @@
 
         function renderPeqDots() {
             const graphViz = document.getElementById('graph-visualization');
-            // GEQ 모드일 때는 dots를 그리지 않음
-            if (document.getElementById('geq').classList.contains('active')) {
-                document.querySelectorAll('.peq-dot').forEach(dot => dot.remove());
-                return;
+            // 기존 점들 모두 제거
+            graphViz.querySelectorAll('.peq-dot').forEach(dot => dot.remove());
+
+            // PEQ 모드일 때만 점들을 그림
+            if (document.getElementById('peq').classList.contains('active')) {
+                peqFilters.forEach(filter => {
+                    const dot = document.createElement('div');
+                    dot.className = 'peq-dot';
+                    dot.textContent = filter.id;
+                    dot.setAttribute('data-id', filter.id);
+                    
+                    const xPos = freqToX(filter.freq);
+                    const yPos = gainToY(filter.gain);
+
+                    dot.style.left = `${xPos}%`;
+                    dot.style.top = `${yPos}%`;
+                    dot.style.transform = 'translate(-50%, -50%)'; 
+
+                    dot.onclick = (e) => { e.stopPropagation(); selectFilter(filter.id); };
+                    dot.onmousedown = (e) => startDrag(e, filter.id);
+                    dot.addEventListener('wheel', (e) => adjustQ(e, filter.id));
+
+                    graphViz.appendChild(dot);
+                });
             }
-
-            document.querySelectorAll('.peq-dot').forEach(dot => dot.remove());
-
-            peqFilters.forEach(filter => {
-                const dot = document.createElement('div');
-                dot.className = 'peq-dot';
-                dot.textContent = filter.id;
-                dot.setAttribute('data-id', filter.id);
-                
-                // 실제 값 기반 위치 설정
-                const xPos = freqToX(filter.freq);
-                const yPos = gainToY(filter.gain);
-
-                dot.style.left = `${xPos}%`;
-                dot.style.top = `${yPos}%`;
-                dot.style.transform = 'translate(-50%, -50%)'; 
-
-                dot.onclick = (e) => { e.stopPropagation(); selectFilter(filter.id); };
-                dot.onmousedown = (e) => startDrag(e, filter.id);
-                // 휠 이벤트 추가
-                dot.addEventListener('wheel', (e) => adjustQ(e, filter.id));
-
-                graphViz.appendChild(dot);
-            });
         }
         
         function selectFilter(id, repositionPopup = true) {
@@ -376,7 +251,6 @@
             selectedFilterId = id;
             const popup = document.getElementById('param-popup');
             
-            // 팝업 입력 필드 데이터 업데이트
             document.getElementById('popup-title').textContent = `필터 ${id} 파라미터 (${filter.type})`;
             document.getElementById('popup-freq').value = filter.freq.toFixed(0);
             document.getElementById('popup-gain').value = filter.gain.toFixed(1);
@@ -384,33 +258,28 @@
             document.getElementById('popup-type').value = filter.type;
             document.getElementById('popup-delete-btn').onclick = () => deleteFilter(id);
 
-            // 팝업 위치 설정
             if (repositionPopup) {
                 const dotElement = document.querySelector(`.peq-dot[data-id="${id}"]`);
                 if (dotElement) {
                     const rect = dotElement.getBoundingClientRect();
                     const graphRect = document.getElementById('graph-visualization').getBoundingClientRect();
                     
-                    // 팝업이 그래프 영역 밖으로 나가지 않도록 조정 (간단한 버전)
                     let left = rect.left - graphRect.left + 35;
                     let top = rect.top - graphRect.top;
 
-                    // 팝업이 오른쪽 경계를 넘어가면 왼쪽으로 표시
-                    if (left + 190 > graphRect.width) { 
-                        left = rect.left - graphRect.left - 190;
+                    if (left + 210 > graphRect.width) { 
+                        left = rect.left - graphRect.left - 210;
                     }
                     
                     popup.style.left = `${left}px`;
                     popup.style.top = `${top}px`;
-                    popup.style.display = 'block';
                 }
-            } else if (selectedFilterId == id) {
-                 popup.style.display = 'block';
             }
+            popup.style.display = 'block';
             
-            // 시각적 피드백
             document.querySelectorAll('.peq-dot').forEach(d => d.classList.remove('selected'));
-            document.querySelector(`.peq-dot[data-id="${id}"]`).classList.add('selected');
+            const selectedDot = document.querySelector(`.peq-dot[data-id="${id}"]`);
+            if (selectedDot) selectedDot.classList.add('selected');
         }
 
         function deleteFilter(id) {
@@ -425,68 +294,48 @@
             renderPeqDots();
         }
 
-        // 드래그 시작 함수 (Freq/Gain 조절)
         function startDrag(e, id) {
             e.preventDefault();
-            selectFilter(id);
+            selectFilter(id, true);
             const dot = document.querySelector(`.peq-dot[data-id="${id}"]`);
-            dot.classList.add('selected');
-            
             const graphRect = document.getElementById('graph-visualization').getBoundingClientRect();
             
             function onMouseMove(e) {
-                let x = e.clientX - graphRect.left;
-                let y = e.clientY - graphRect.top;
-                
-                let xPct = (x / graphRect.width) * 100;
-                let yPct = (y / graphRect.height) * 100;
+                let xPct = ((e.clientX - graphRect.left) / graphRect.width) * 100;
+                let yPct = ((e.clientY - graphRect.top) / graphRect.height) * 100;
 
                 xPct = Math.max(0, Math.min(100, xPct));
                 yPct = Math.max(0, Math.min(100, yPct));
 
-                // 위치 업데이트
-                dot.style.left = `${xPct}%`;
-                dot.style.top = `${yPct}%`;
-
-                // 데이터 업데이트
-                const filter = peqFilters.find(f => f.id === id);
-                filter.freq = xToFreq(xPct);
-                filter.gain = yToGain(yPct);
+                const currentFilter = peqFilters.find(f => f.id === id);
+                currentFilter.freq = xToFreq(xPct);
+                currentFilter.gain = yToGain(yPct);
                 
-                // 팝업 및 리스트 갱신
-                selectFilter(id, true); 
-                renderPeqList(); 
+                updateFilterData(id, 'freq', currentFilter.freq);
+                updateFilterData(id, 'gain', currentFilter.gain);
+
+                selectFilter(id, true);
             }
 
             function onMouseUp() {
                 document.removeEventListener('mousemove', onMouseMove);
                 document.removeEventListener('mouseup', onMouseUp);
-                dot.classList.remove('selected');
-                // 최종 변경 값으로 갱신
-                updateFilterData(id, 'freq', filter.freq);
-                updateFilterData(id, 'gain', filter.gain);
             }
 
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
         }
 
-        // 휠 이벤트 (Q값 조절)
         function adjustQ(e, id) {
             e.preventDefault();
             e.stopPropagation(); 
             const filter = peqFilters.find(f => f.id === id);
             if (!filter) return;
             
-            const delta = e.deltaY < 0 ? 0.05 : -0.05; 
-            filter.q = parseFloat(filter.q) + delta;
-            filter.q = Math.max(0.7, Math.min(100, filter.q));
-            
-            // 팝업 및 데이터 갱신
-            updateFilterData(id, 'q', filter.q);
+            const delta = e.deltaY < 0 ? filter.q * 0.1 : filter.q * -0.1;
+            updateFilterData(id, 'q', parseFloat(filter.q) + delta);
         }
 
-        // 그래프 외부 클릭 시 팝업 닫기
         document.addEventListener('click', (e) => {
             const popup = document.getElementById('param-popup');
             if (popup.style.display === 'block' && 
@@ -498,8 +347,6 @@
             }
         });
 
-
-        // 메인 DOMContentLoaded 이벤트 리스너
         document.addEventListener('DOMContentLoaded', () => {
             const geqOption = document.getElementById('geq');
             const peqOption = document.getElementById('peq');
@@ -514,26 +361,22 @@
                 geqControls.classList.toggle('visible', type === 'geq');
                 peqControls.classList.toggle('visible', type === 'peq');
                 
-                // 모드 전환 시 팝업 숨김 및 PEQ 동그라미 렌더링/제거
                 document.getElementById('param-popup').style.display = 'none';
                 renderAllPeq(); 
             }
             
             createGeqSliders();
-
-            // 초기 PEQ 필터 2개 생성
             addPeqFilterData();
             addPeqFilterData();
-            
             renderAllPeq(); 
 
-            // 초기 로드 시 GEQ 표시
             updateModeDisplay('geq');
             
             addFilterBtn.addEventListener('click', () => {
                 const newFilter = addPeqFilterData();
                 renderAllPeq();
-                selectFilter(newFilter.id); // 새 필터 추가 후 바로 선택
+                // 새 필터 추가 후 그래프에 점이 렌더링된 후 selectFilter 호출
+                setTimeout(() => selectFilter(newFilter.id), 0);
             });
             
             geqOption.addEventListener('click', () => updateModeDisplay('geq'));
