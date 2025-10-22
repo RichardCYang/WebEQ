@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 화면</title>
+    <style>
+        :root {
+            --primary-color: #A5DFF9; /* 연한 푸른색 테마 */
+            --background-color: #f7f9fc;
+            --text-color: #333;
+            --button-bg: #e0f4ff; /* 버튼 배경 */
+            --button-shadow: rgba(165, 223, 249, 0.4); /* 버튼 그림자 색상 */
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 상단바 스타일 (이전과 동일) */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* 메인 콘텐츠 스타일 (이전과 동일) */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-container {
+            display: flex;
+            gap: 60px;
+        }
+        .main-button {
+            padding: 30px 60px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            background-color: var(--button-bg);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1),
+                        -4px -4px 10px #ffffff;
+        }
+        .main-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.15),
+                        -6px -6px 15px #ffffff;
+        }
+        .main-button:active {
+            transform: translateY(0);
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+                        inset -2px -2px 5px #ffffff;
+        }
+
+        /* --- 모달 스타일 --- */
+        .modal {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 상단에서 15% 위치에, 가운데 정렬 */
+            padding: 40px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: -30px;
+            margin-right: -20px;
+        }
+        .upload-area-modal {
+            border: 2px dashed var(--primary-color);
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .upload-area-modal p {
+            margin: 5px 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        .upload-hint {
+            color: #888;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        .start-default {
+            color: #888; /* 회색 텍스트 */
+            font-size: 14px;
+            margin-top: 15px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">Audio Toolkit</a>
+        <nav>
+            <a href="eq.html">EQ 조절</a>
+            <a href="convert.html">파일 변환</a>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="main-container">
+            <button class="main-button" id="eq-button">1. EQ 조절</button>
+            <button class="main-button" onclick="location.href='convert.html'">2. TXT 파일 변환</button>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>테스트 음원을 업로드 해 주세요</h2>
+            <div class="upload-area-modal">
+                <p>MP3 파일 드래그앤드롭</p>
+                <p style="font-size: 14px;">(또는 클릭하여 파일 선택)</p>
+            </div>
+            <p class="upload-hint">업로드된 음원으로 EQ 설정 비교가 가능합니다.</p>
+            
+            <a href="eq.html" class="start-default">기본 음원으로 시작하기</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const eqButton = document.getElementById('eq-button');
+            const modal = document.getElementById('uploadModal');
+            const closeBtn = document.querySelector('.close-btn');
+            const startDefaultLink = document.querySelector('.start-default');
+            const uploadArea = document.querySelector('.upload-area-modal');
+
+            // EQ 버튼 클릭 시 모달 열기
+            eqButton.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            // 닫기 버튼 클릭 시 모달 닫기
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // 모달 외부 클릭 시 닫기
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // 업로드 영역 클릭 시 실제 파일 입력 창 트리거 (가상 기능)
+            uploadArea.onclick = function() {
+                alert("실제 MP3 파일 업로드 로직이 실행됩니다.");
+                // 실제 구현 시, <input type="file" accept=".mp3" style="display:none;"> 요소를 클릭합니다.
+                // 성공적으로 업로드되었다고 가정하고 eq.html로 이동합니다.
+                // window.location.href = "eq.html?file=uploaded"; 
+            }
+
+            // '기본 음원으로 시작하기' 클릭 시 eq.html로 이동
+            startDefaultLink.onclick = function(event) {
+                // event.preventDefault(); // href 기본 동작 방지 (필요 시)
+                // 서버 기본 음원으로 시작한다는 플래그를 넘길 수 있습니다.
+                window.location.href = "eq.html?default=true";
+            }
+        });
+    </script>
+</body>
+</html>
