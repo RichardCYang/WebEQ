@@ -285,6 +285,33 @@ function resetGain(id){
 	}
 }
 
+function savePEQ(){
+	if (confirm("모든 PEQ 필터를 저장하시겠습니까?")) {
+		const userId = localStorage.getItem('webeq_userid');
+		if (!userId) {
+			alert("비정상적 사용자입니다! 웹페이지를 새로고침 해보세요.");
+			return;
+		}
+
+		const data = {}
+		data.eqFilters = eqFilters;
+		data.userid = userId;
+
+		const response = fetch('/cest', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data)
+		});
+		
+		response.then((resp) => {
+			if (resp.ok)
+				alert("저장되었습니다!");
+		});
+	}
+}
+
 function resetPEQ(){
 	if (confirm("모든 PEQ 필터를 삭제하고 초기화하시겠습니까?")) {
 		eqFilters = [];
