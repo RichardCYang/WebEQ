@@ -67,6 +67,13 @@
   color: white;
 }
 
+#peq-list {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	gap: 16px;
+	order: 0;
+}
+
 /* --- GEQ/PEQ 토글 스위치 --- */
 .toggle-switch {
   display: inline-flex;
@@ -329,11 +336,11 @@ input[type="range"]::-moz-range-thumb {
 }
 #controls-container.active {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 15px;
   min-height: 80px;
-  padding-bottom: 50px;
 }
 #geq-container.active {
   display: flex;
@@ -347,40 +354,50 @@ input[type="range"]::-moz-range-thumb {
 
 /* PEQ 추가 버튼 스타일 및 위치 */
 #add-eq-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: #007bff;
-  color: #2d3748;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 1.5em;
-  font-weight: bold;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 10;
-  margin: 0;
+	top: 10px;
+	right: 15px;
+	background: #007bff;
+	color: #2d3748;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 1.5em;
+	font-weight: bold;
+	line-height: 1;
+	cursor: pointer;
+	z-index: 10;
+	margin: 0;
 }
 #add-eq-btn:hover {
   background: #0056b3;
 }
 
-/* 초기화 버튼 스타일 및 위치 */
-.reset-btn {
-  position: absolute;
-  right: 15px;
-  bottom: 10px;
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.9em;
-  cursor: pointer;
-  z-index: 10;
+.controls-sub-container {
+	display: flex;
+	order: 1;
+	color: white;
+	height: 32px;
+	border: none;
+	z-index: 10;
+	gap: 16px;
 }
-.reset-btn:hover {
+
+.controls-sub-container button{
+	background: #6c757d;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	font-size: 0.9em;
+	cursor: pointer;
+	z-index: 10;
+	width: 128px;
+}
+
+/* 저장 버튼 스타일 및 위치 */
+.save-btn {
+  
+}
+.save-btn:hover {
   background: #5a6268;
 }
 
@@ -391,6 +408,7 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   width: auto;
+  height: 48px;
   cursor: pointer;
   transition: all 0.2s;
   border: 1px solid transparent;

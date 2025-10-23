@@ -41,8 +41,12 @@
 				</div>
 
 				<div id="controls-container" class="active">
-					<button id="add-eq-btn">➕</button>
-					<button id="reset-peq-btn" class="reset-btn" onclick="resetPEQ()">PEQ 전체 초기화</button>
+					<div class="controls-sub-container">
+						<button id="add-eq-btn">➕</button>
+						<button id="reset-peq-btn" onclick="resetPEQ()">PEQ 전체 초기화</button>
+						<button id="save-peq-btn" onclick="savePEQ()">PEQ 전체 저장</button>
+					</div>
+					<div id="peq-list"></div>
 				</div>
 				<div id="geq-container"></div>
 			</div>

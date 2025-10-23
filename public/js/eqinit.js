@@ -6,6 +6,7 @@ const PI = Math.PI;
 const CANVAS = document.getElementById("responseCanvas");
 const CTX = CANVAS.getContext("2d");
 const WRAPPER = document.getElementById("graph-wrapper");
+const PEQ_LIST = document.getElementById("peq-list");
 const CONTROLS_CONTAINER = document.getElementById("controls-container");
 const GEQ_CONTAINER = document.getElementById("geq-container");
 const ADD_PEQ_BUTTON = document.getElementById("add-eq-btn");
@@ -347,7 +348,7 @@ function renderControls(){
 				<span class="sep">/</span>
 				<span id="q-display-${eq.id}">${qText}</span>
 			`;
-		CONTROLS_CONTAINER.appendChild(cardDiv);
+		PEQ_LIST.appendChild(cardDiv);
 	});
 }
 
@@ -797,7 +798,6 @@ function drawGraph(responseCurve, markerPositions){
 	const dbLines = [-15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15];
 	
 	for (let db of dbLines){
-		console.log(CANVAS.clientWidth, CANVAS.width);
 		const y = (GAIN_HEIGHT * (MAX_DB - db)) / DB_RANGE;
 		CTX.beginPath();
 		CTX.moveTo(0, y);

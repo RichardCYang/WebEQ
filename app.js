@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const mariadb = require('mariadb');
 const express = require('express');
 const path = require('path');
+const os = require('os');
 
 // Express 앱 생성
 const app = express();
@@ -17,8 +18,38 @@ const dbpool = mariadb.createPool({
     database: 'webeq'
 });
 
-function makeEQSettingText(){
+function getFormattedCurrentTime() {
+	const now = new Date();
+
+	const year = now.getFullYear();
+	const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+	const day = String(now.getDate()).padStart(2, '0');
+
+	let hours = now.getHours();
+	const minutes = String(now.getMinutes()).padStart(2, '0');
+	const seconds = String(now.getSeconds()).padStart(2, '0');
+
+	// 오후/오전 결정 및 12시간 형식으로 변환
+	const ampm = hours >= 12 ? '오후' : '오전';
+	hours = hours % 12;
 	
+	// 0시(자정)를 12시로 표시
+	if (hours === 0)
+		hours = 12;
+	
+	return `${year}. ${month}. ${day} ${ampm} ${hours}:${minutes}:${seconds}`;
+}
+
+function makeEQSettingText(eqnodes){
+	let data = 'Filter Settings file' + os.EOL;
+	data = data + os.EOL;
+	data = data + 'Web eq V0.01.1' + os.EOL;
+	data = data + 'Dated: ' + getFormattedCurrentTime() + os.EOL;
+	data = data + os.EOL;
+	data = data + 'Notes' + os.EOL;
+	data = data + os.EOL;
+	data = data + 'Equaliser: Generic' + os.EOL;
+	data = data + 'No measurement' + os.EOL;
 }
 
 async function initTables(){
