@@ -134,29 +134,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.post('/cest', express.json(), (req, res) => {
 	const body = req.body;
     if (!body) {
-        res.status(400).end();
+        res.status(400).end('ERR_EMPTY_BODY');
         return;
     }
 
     if (!Object.hasOwn(body, 'eqFilters')) {
-        res.status(400).end();
+        res.status(400).end('ERR_EMPTY_FILTERS');
         return;
     }
 
     if (!Object.hasOwn(body, 'userid')) {
-        res.status(400).end();
+        res.status(400).end('ERR_EMPTY_USERID');
         return;
     }
 
     // 클라이언트로부터 받은 정보를 바탕으로 EQ 설정 텍스트 파일 포맷 생성
     const txtdata = makeEQSettingText(body.eqFilters);
 
-    updateUserEQSettingData(body.userid, txtdata).then(() => {
-        res.status(200).end();
-        return;
-    }).catch((err) => {
-        res.status(400).end();
-        return;
+    // 사용자 ID 정보가 DB에 존재하는지 확인하고 처리
+    hasUserFromDB(body.userid).then(result => {
+        if (result) {
+            updateUserEQSettingData(body.userid, txtdata).then(() => {
+                res.status(200).end();
+                return;
+            }).catch((err) => {
+                res.status(400).end('ERR_OTHER');
+                return;
+            });
+        } else {
+            res.status(400).end('ERR_USER_NOT_FOUND');
+            return;
+        }
     });
 });
 
@@ -177,7 +185,7 @@ app.post('/cuid', (req, res) => {
 
 // 사용자 식별자 정보 존재 유무 확인 요청이 왔을 때 처리할 핸들러
 app.post('/suid', express.text(), (req, res) => {
-    hasUserFromDB('aaa').then(result => {
+    hasUserFromDB(req.body).then(result => {
         res.json({exists: result});
     });
 });

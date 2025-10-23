@@ -38,8 +38,7 @@ function makeNewId(){
     });
 }
 
-// 해당 파일 외부에서 상수/변수 접근 방지를 위한 스코프 지정
-(() => {
+function updateUserId(){
     const userId = localStorage.getItem('webeq_userid');
     if (userId){
         // 브라우저 ID 정보가 서버에 존재하는지 확인
@@ -53,4 +52,4 @@ function makeNewId(){
         // 처음부터 브라우저 ID 정보가 없다면, 새로 생성
         makeNewId();
     }
-})();
+}

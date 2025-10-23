@@ -289,7 +289,8 @@ function savePEQ(){
 	if (confirm("모든 PEQ 필터를 저장하시겠습니까?")) {
 		const userId = localStorage.getItem('webeq_userid');
 		if (!userId) {
-			alert("비정상적 사용자입니다! 웹페이지를 새로고침 해보세요.");
+			alert("고유값이 생성되지 않았습니다! 다시 시도해보세요");
+			updateUserId();
 			return;
 		}
 
@@ -306,8 +307,19 @@ function savePEQ(){
 		});
 		
 		response.then((resp) => {
-			if (resp.ok)
+			if (resp.ok) {
 				alert("저장되었습니다!");
+			} else {
+				const recvdata = resp.text();
+				recvdata.then((d) => {
+					switch (d) {
+						case 'ERR_USER_NOT_FOUND':
+							alert("고유값이 생성되지 않았습니다! 다시 시도해보세요");
+							updateUserId();
+							return;
+					}
+				});
+			}
 		});
 	}
 }
