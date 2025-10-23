@@ -22,14 +22,23 @@
 
     <main class="main-content">
         <div class="conversion-container">
-            <!-- 왼쪽: 파일 업로드 영역 -->
+            <!-- 파일 업로드 영역 -->
             <div id="upload-area" class="upload-area">
                 <div class="upload-icon">↑</div> <!-- 아이콘은 간단한 문자로 대체 또는 SVG/이미지 사용 가능 -->
                 <p>REW 측정 또는 EQ 필터 TXT 파일을<br>여기에 드래그앤드롭 하세요.</p>
                 <strong id="upload-text">파일 업로드</strong>
             </div>
-
-            <!-- 오른쪽: 포맷 선택 영역 -->
+        </div>
+        <div class="conversion-container">
+            <!-- EQ에서 불러오기 영역 -->
+            <div class="format-selection">
+                <h3>PEQ에서 가져오기</h3>
+                <textarea class="load-from-eq-btn load-from-eq-preview"></textarea>
+                <button class="load-from-eq-btn">EQ 설정파일 불러오기</button>
+            </div>
+        </div>
+        <div class="conversion-container">
+            <!-- 포맷 선택 영역 -->
             <div class="format-selection">
                 <h3>변환할 타겟 포맷 선택</h3>
                 <ul id="format-list" class="format-list">
