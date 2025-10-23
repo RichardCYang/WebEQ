@@ -47,7 +47,7 @@ async function hasUserFromDB(userid){
 async function makeNewUserToDB(userid){
     try{
         const conn = await dbpool.getConnection();
-        await conn.query(`INSERT INTO users VALUES (?, NOW())`, [userid]);
+        await conn.query(`INSERT INTO users (id, creation_time) VALUES (?, NOW())`, [userid]);
     }catch(err){
         console.log(err)
     }
