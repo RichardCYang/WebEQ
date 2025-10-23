@@ -1,4 +1,4 @@
-function hasUserId(userid, result){
+function hasUserId(userid, callback){
     // 익명 사용자의 ID 정보가 서버에 존재하는지 확인하는 요청
     const response = fetch('/suid', {
         method: 'POST',
@@ -7,6 +7,16 @@ function hasUserId(userid, result){
         },
         body: userid
     });
+	
+	response.then((resp) => {
+		if (resp.ok){
+			const data = resp.json();
+			data.then((d) => {
+				if (Object.hasOwn(d, 'exists') && callback)
+					callback(d.exists);
+			});
+		}
+	});
 }
 
 function makeNewId(){
@@ -21,8 +31,8 @@ function makeNewId(){
     response.then((resp) => {
         if (resp.ok){
             const data = resp.json();
-            data.then((data) => {
-                localStorage.setItem('webeq_userid', data.userId);
+            data.then((d) => {
+                localStorage.setItem('webeq_userid', d.userId);
             });
         }
     });
@@ -32,9 +42,12 @@ function makeNewId(){
 (() => {
     const userId = localStorage.getItem('webeq_userid');
     if (userId){
-        // 브라우저 ID 정보가 서버에 존재하는지 확인하고, 존재하지 않으면 새로 발급
+        // 브라우저 ID 정보가 서버에 존재하는지 확인
         hasUserId(userId, (result) => {
-            console.log(result);
+			// 존재하지 않으면 새로 발급
+            if (!result){
+				makeNewId();
+			}
         });
     }else{
         // 처음부터 브라우저 ID 정보가 없다면, 새로 생성
