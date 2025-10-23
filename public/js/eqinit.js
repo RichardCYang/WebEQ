@@ -600,11 +600,9 @@ function initGEQ(){
 }
 
 function renderGEQControls(){
-	GEQ_CONTAINER.innerHTML = "";
-
 	// GEQ 슬라이더 그룹을 담을 div 생성
-	const geqSlidersDiv = document.createElement("div");
-	geqSlidersDiv.id = "geq-slider-group"; // CSS에서 정의된 ID 사용
+	const geqSlidersDiv = GEQ_CONTAINER.querySelector("#geq-slider-group");
+	geqSlidersDiv.innerHTML = "";
 
 	geqFilters.forEach((eq, index) => {
 		const bandDiv = document.createElement("div");
@@ -662,14 +660,6 @@ function renderGEQControls(){
 	});
 
 	GEQ_CONTAINER.appendChild(geqSlidersDiv); // 슬라이더 그룹 추가
-
-	// GEQ 초기화 버튼을 다시 추가 (CSS에 정의된 reset-btn 위치를 활용)
-	const resetButton = document.createElement("button");
-	resetButton.id = "reset-geq-btn";
-	resetButton.className = "reset-btn";
-	resetButton.textContent = "GEQ 전체 초기화";
-	resetButton.onclick = resetGEQ;
-	GEQ_CONTAINER.appendChild(resetButton);
 }
 
 // ==========================================================
@@ -1091,35 +1081,4 @@ document.addEventListener("click", (e) => {
 		document.querySelectorAll(".peq-dot").forEach((d) => d.classList.remove("selected"));
 		selectedFilterId = null;
 	}
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-	const geqOption = document.getElementById("geq");
-	const peqOption = document.getElementById("peq");
-	const geqControls = document.getElementById("geq-controls");
-	const peqControls = document.getElementById("peq-controls");
-	const addFilterBtn = document.getElementById("add-filter-btn");
-
-	function updateModeDisplay(type){
-		geqOption.classList.toggle("active", type === "geq");
-		peqOption.classList.toggle("active", type === "peq");
-
-		geqControls.classList.toggle("visible", type === "geq");
-		peqControls.classList.toggle("visible", type === "peq");
-
-		document.getElementById("param-popup").style.display = "none";
-		renderAllPeq();
-	}
-
-	updateModeDisplay("geq");
-
-	addFilterBtn.addEventListener("click", () => {
-		const newFilter = addPeqFilterData();
-		renderAllPeq();
-		// 새 필터 추가 후 그래프에 점이 렌더링된 후 selectFilter 호출
-		setTimeout(() => selectFilter(newFilter.id), 0);
-	});
-
-	geqOption.addEventListener("click", () => updateModeDisplay("geq"));
-	peqOption.addEventListener("click", () => updateModeDisplay("peq"));
 });
