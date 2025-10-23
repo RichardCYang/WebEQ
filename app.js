@@ -17,10 +17,14 @@ const dbpool = mariadb.createPool({
     database: 'webeq'
 });
 
+function makeEQSettingText(){
+	
+}
+
 async function initTables(){
     try{
         const conn = await dbpool.getConnection();
-        await conn.query("CREATE TABLE IF NOT EXISTS users (id UUID PRIMARY KEY, creation_time DATETIME)");
+        await conn.query("CREATE TABLE IF NOT EXISTS users (id UUID PRIMARY KEY, creation_time DATETIME, eqsettingdata TEXT)");
     }catch(err){
         console.log(err);
     }
@@ -53,6 +57,11 @@ initTables();
 
 // public 폴더를 정적 파일 제공을 위한 폴더로 설정
 app.use(express.static(path.join(__dirname, 'public')));
+
+// EQ 설정 텍스트 정보 임시 저장 요청이 왔을 때 처리할 핸들러
+app.post('/cest', (req, res) => {
+	
+});
 
 // 사용자 식별자 정보 발급 POST 요청이 왔을 때 처리할 핸들러
 app.post('/cuid', (req, res) => {
