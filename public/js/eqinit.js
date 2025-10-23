@@ -14,7 +14,6 @@ const MODAL_ID_DISPLAY = document.getElementById("modal-eq-id-display");
 const MODAL_INPUTS = document.getElementById("modal-inputs");
 const MODAL_ACTIONS = document.getElementById("modal-actions");
 
-const CANVAS_WIDTH = 1200;
 const GAIN_HEIGHT = 380;
 
 const MIN_DB = -15;
@@ -754,7 +753,7 @@ function updateGraph(){
 				if (Math.abs(f - eq.freq) < 1) {
 					// 현재 주파수에서의 정확한 최종 게인값을 기반으로 마커 Y 위치 계산
 					const y_at_freq = (GAIN_HEIGHT * (MAX_DB - currentGainDB)) / DB_RANGE;
-					const x_at_freq = (CANVAS_WIDTH * (Math.log10(eq.freq) - logMin)) / logRange;
+					const x_at_freq = ((CANVAS.clientWidth + 1) * (Math.log10(eq.freq) - logMin)) / logRange;
 
 					if (!markerPositions.some((m) => m.id === eq.id)){
 						markerPositions.push({
@@ -782,9 +781,9 @@ function updateGraph(){
 // 7. 그래프 그리기 및 조작 함수 (수정된 drawGraph 함수)
 // ==========================================================
 function drawGraph(responseCurve, markerPositions){
-	CTX.clearRect(0, 0, CANVAS_WIDTH, GAIN_HEIGHT);
+	CTX.clearRect(0, 0, CANVAS.clientWidth + 1, GAIN_HEIGHT);
 	CTX.fillStyle = "#1a1a1a";
-	CTX.fillRect(0, 0, CANVAS_WIDTH, GAIN_HEIGHT);
+	CTX.fillRect(0, 0, CANVAS.clientWidth + 1, GAIN_HEIGHT);
 	CTX.font = "10px Arial";
 
 	// 기존 라벨 및 마커 제거
@@ -798,10 +797,11 @@ function drawGraph(responseCurve, markerPositions){
 	const dbLines = [-15, -12, -9, -6, -3, 0, 3, 6, 9, 12, 15];
 	
 	for (let db of dbLines){
+		console.log(CANVAS.clientWidth, CANVAS.width);
 		const y = (GAIN_HEIGHT * (MAX_DB - db)) / DB_RANGE;
 		CTX.beginPath();
 		CTX.moveTo(0, y);
-		CTX.lineTo(CANVAS_WIDTH, y);
+		CTX.lineTo(CANVAS.clientWidth + 1, y);
 		CTX.strokeStyle = db === 0 ? "#888" : db % 6 === 0 ? "#555" : "#333";
 		CTX.lineWidth = db === 0 ? 1.5 : db % 6 === 0 ? 1 : 0.5;
 		CTX.stroke();
@@ -827,7 +827,7 @@ function drawGraph(responseCurve, markerPositions){
 	
 	for (let f of majorFreqs){
 		if (f >= MIN_FREQ && f <= MAX_FREQ){
-			const x = (CANVAS_WIDTH * (Math.log10(f) - logMin)) / logRange;
+			const x = ((CANVAS.clientWidth + 1) * (Math.log10(f) - logMin)) / logRange;
 			CTX.beginPath();
 			CTX.moveTo(x, 0);
 			CTX.lineTo(x, GAIN_HEIGHT);
@@ -851,7 +851,7 @@ function drawGraph(responseCurve, markerPositions){
 	CTX.lineWidth = 3;
 	responseCurve.forEach(({ freq, gainDB }, index) => {
 		const logF = Math.log10(freq);
-		const x = (CANVAS_WIDTH * (logF - logMin)) / logRange;
+		const x = ((CANVAS.clientWidth + 1) * (logF - logMin)) / logRange;
 		const y = (GAIN_HEIGHT * (MAX_DB - gainDB)) / DB_RANGE;
 		if (index === 0)
 			CTX.moveTo(x, y);
@@ -885,7 +885,7 @@ function screenToFreq(x){
 	const logMin = Math.log10(MIN_FREQ);
 	const logMax = Math.log10(MAX_FREQ);
 	const logRange = logMax - logMin;
-	const logF = logMin + (x / CANVAS_WIDTH) * logRange;
+	const logF = logMin + (x / (CANVAS.clientWidth + 1)) * logRange;
 	return Math.pow(10, logF);
 }
 
@@ -937,7 +937,7 @@ function handleDragMove(e){
 	let x = e.clientX - rect.left;
 	let y = e.clientY - rect.top;
 
-	x = Math.max(0, Math.min(CANVAS_WIDTH, x));
+	x = Math.max(0, Math.min((CANVAS.clientWidth + 1), x));
 	y = Math.max(0, Math.min(GAIN_HEIGHT, y));
 
 	let newFreq = screenToFreq(x);
@@ -1033,9 +1033,17 @@ window.onload = () => {
 	addPEQ({ type: "HIGH_PASS", freq: 50, slope: 12, gain: 0 }, false);
 
 	closeModal();
+	
+	CANVAS.width = CANVAS.clientWidth + 1;
 	renderControls();
 	updateGraph();
 };
+
+window.onresize = () => {
+	CANVAS.width = CANVAS.clientWidth + 1;
+	renderControls();
+	updateGraph();
+}
 
 document.addEventListener("click", (e) => {
 	const popup = document.getElementById("param-popup");
@@ -1047,7 +1055,6 @@ document.addEventListener("click", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-	console.log('load!!');
 	const geqOption = document.getElementById("geq");
 	const peqOption = document.getElementById("peq");
 	const geqControls = document.getElementById("geq-controls");
