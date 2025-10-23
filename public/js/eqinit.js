@@ -1111,11 +1111,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		renderAllPeq();
 	}
 
-	createGeqSliders();
-	addPeqFilterData();
-	addPeqFilterData();
-	renderAllPeq();
-
 	updateModeDisplay("geq");
 
 	addFilterBtn.addEventListener("click", () => {
