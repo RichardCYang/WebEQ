@@ -102,6 +102,17 @@ async function updateUserEQSettingData(userid, eqsettingdata){
     }
 }
 
+async function selectUserEQSettingData(userid){
+	try{
+        const conn = await dbpool.getConnection();
+        const rows = await conn.query("SELECT eqsettingdata FROM users WHERE id = ?", [userid]);
+		return rows;
+    }catch(err){
+        console.log(err);
+		return null;
+    }
+}
+
 async function hasUserFromDB(userid){
     try{
         const conn = await dbpool.getConnection();
@@ -129,6 +140,29 @@ initTables();
 
 // public 폴더를 정적 파일 제공을 위한 폴더로 설정
 app.use(express.static(path.join(__dirname, 'public')));
+
+// 임시 저장된 EQ 설정 텍스트 정보를 다시 불러오는 요청이 왔을 때 처리할 핸들러
+app.post('/sest', express.json(), async(req, res) => {
+	const body = req.body;
+    if (!body) {
+        res.status(400).end('ERR_EMPTY_BODY');
+        return;
+    }
+
+    if (!Object.hasOwn(body, 'userid')) {
+        res.status(400).end('ERR_EMPTY_USERID');
+        return;
+    }
+	
+	const txtdata = await selectUserEQSettingData(body.userid);
+	
+	if (txtdata && txtdata.length > 0) {
+		res.status(200).json(txtdata[0]);
+		return;
+	}
+	
+	res.status(400).end('ERR_PEQDATA_NOT_FOUND');
+});
 
 // EQ 설정 텍스트 정보 임시 저장 요청이 왔을 때 처리할 핸들러
 app.post('/cest', express.json(), (req, res) => {
