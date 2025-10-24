@@ -3,6 +3,7 @@ const mariadb = require('mariadb');
 const express = require('express');
 const path = require('path');
 const os = require('os');
+require('dotenv').config()
 
 // Express 앱 생성
 const app = express();
@@ -11,11 +12,11 @@ const port = 3000;
 
 // 데이터베이스 접속 정보 설정
 const dbpool = mariadb.createPool({
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'admin',
-    database: 'webeq'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 });
 
 function getFormattedCurrentTime() {
