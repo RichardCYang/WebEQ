@@ -474,6 +474,7 @@ input[type="range"]::-moz-range-thumb {
   height: 100%;
   padding: 0 1px;
   min-width: 20px;
+  width: 20px;
 }
 /* 💡 3번 문제 해결: GEQ 게인 디스플레이 스타일 */
 .geq-band .gain-display {
