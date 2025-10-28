@@ -45,7 +45,7 @@
                     <li>miniDSP용 TXT 포맷</li>
                     <li>Hypex DSP용 XML 포맷</li>
                     <li>Generic Biquad CSV 포맷</li>
-                    <li>커스텀 스크립트 출력</li>
+                    <li format="REW">REW 스크립트 출력</li>
                 </ul>
             </div>
         </div>
@@ -132,7 +132,34 @@
                     e.target.classList.add('active');
 
                     // 선택된 포맷에 대한 로직 추가 가능
-                    console.log('Selected format:', e.target.textContent);
+                    switch (e.target.getAttribute("format")) {
+                        case "REW":
+                            if (!peqLoadTxt.value)
+                                return;
+
+                            if (peqLoadTxt.value.length == 0)
+                                return;
+
+                            // Blob 객체 생성 (텍스트 타입으로)
+                            const blob = new Blob([peqLoadTxt.value], {type: 'text/plain;charset=utf-8'});
+
+                            // 임시 URL 생성
+                            const url = URL.createObjectURL(blob);
+
+                            // <a> 태그 동적 생성
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'rew_format.txt';  // 다운로드될 파일 이름
+                            document.body.appendChild(a);   // DOM에 추가 (클릭을 위해 필요)
+
+                            // 자동 클릭으로 다운로드 트리거
+                            a.click();
+
+                            // 정리: URL 해제 및 요소 제거
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            break;
+                    }
                 }
             });
         });
